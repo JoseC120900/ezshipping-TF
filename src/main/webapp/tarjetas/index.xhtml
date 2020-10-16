@@ -1,0 +1,95 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de Tarjetas</title>
+</h:head>
+
+<h:body>
+	
+	<h1>Tarjetas</h1>
+	
+	<h:form id="form-tarjeta">
+		<p:growl id="growl" life="2000" />
+		<p:panelGrid columns="4" id="panel-tarjeta" style="#{tarjetaView.stylePanelTarjeta}"> 
+				<p:outputLabel for="input-nroTarjeta" value="Número de tarjeta: " />
+				<p:inputNumber  id="input-nroTarjeta" value="#{tarjetaView.tarjeta.nroTarjeta}"/>
+				
+				<p:outputLabel for="input-fechaVencimiento" value="Fecha de vencimiento: "/>
+				<p:datePicker id="input-fechaVencimiento" value="#{tarjetaView.tarjeta.fechaVencimiento}" />
+				
+				<p:outputLabel for="input-cvv" value="CVV: " />
+				<p:inputNumber id="input-cvv" value="#{tarjetaView.tarjeta.cvv}"/>	
+		</p:panelGrid>
+
+		<p:panelGrid id="panel-search" columns="4" style="#{tarjetaView.styleTableTarjeta}">
+			<p:outputLabel for="input-search-nroTarjeta" value="Nro de Tarjeta: " />
+			<p:inputText id="input-search-nroTarjeta" value="#{tarjetaView.tarjetaSearch.nroTarjeta}"/> 
+			<p:commandButton value="Buscar" icon="pi pi-search" 
+					actionListener="#{tarjetaView.findByNumero()}"
+					update="form-tarjeta:table-tarjeta :form-tarjeta:toolbar-tarjeta" />
+			<p:commandButton value="Limpiar" icon="pi pi-undo" 
+					actionListener="#{tarjetaView.cleanbyNumero()}"
+					update="@form"/>
+		</p:panelGrid>
+			
+		<p:dataTable id="table-tarjeta" value="#{tarjetaView.tarjetas}" var="tarjeta"
+				paginator="true" rows="3" paginatorPosition="bottom"
+				selectionMode="single" rowKey="#{tarjeta.id}"
+				style="#{tarjetaView.styleTableTarjeta}" emptyMessage="No hay tarjetas"> 
+
+				
+			<p:ajax event="rowSelect" listener="#{tarjetaView.selectTarjeta}" update="@form"/>
+			<p:ajax event="rowUnselect" listener="#{tarjetaView.unselectTarjeta}" update="@form"/>
+			
+			<p:column headerText="Id">
+				<h:outputText value="#{tarjeta.id}" />
+			</p:column>
+			<p:column headerText="Numero de Tarjeta">
+				<h:outputText value="#{tarjeta.nroTarjeta}" />
+			</p:column>
+			<p:column headerText="Fecha de vencimiento">
+				<h:outputText value="#{tarjeta.fechaVencimiento}" />
+			</p:column>
+			<p:column headerText="CVV">
+				<h:outputText value="#{tarjeta.cvv}" />
+			</p:column>
+		</p:dataTable>
+			
+		<p:toolbar id="toolbar-tarjeta">
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file" disabled="#{tarjetaView.disabledButtonNuevo}"
+					actionListener="#{tarjetaView.newTarjeta()}"
+					update="@form" />
+
+				<p:commandButton value="Guardar" icon="pi pi-save" disabled="#{tarjetaView.disabledButtonGuardar}"
+					actionListener="#{tarjetaView.saveTarjeta()}"
+					update="@form" />
+
+				<p:commandButton value="Cancelar" icon="pi pi-times" disabled="#{tarjetaView.disabledButtonCancelar}"
+					actionListener="#{tarjetaView.cancelTarjeta()}"
+					update="@form" />
+
+				<p:commandButton value="Editar" icon="pi pi-pencil" disabled="#{tarjetaView.disabledButtonEditar}"
+					actionListener="#{tarjetaView.editTarjeta()}"
+					update="@form" />
+
+				<p:commandButton value="Eliminar" icon="pi pi-trash" disabled="#{tarjetaView.disabledButtonEliminar}"
+					actionListener="#{tarjetaView.deleteTarjeta()}"
+					update=":form-tarjeta:table-tarjeta :form-tarjeta:toolbar-tarjeta" >
+					<p:confirm header="Confirmación" 
+						message="Estas seguro que deseas eliminar tarjeta: #{tarjetaView.messageConfirmDialog}?" 
+						icon="pi pi-exclamation-triangle" />
+				</p:commandButton>
+				
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>	
+			</f:facet>
+		</p:toolbar>
+	</h:form>
+</h:body>
+</html>
