@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+
+	<persistence-unit name="EZShippingPU" transaction-type="JTA">
+		<jta-data-source>java:/EZShippingDS</jta-data-source>
+		<class>pe.edu.upc.ezshipping.models.entities.ClienteTarjeta</class>
+		<class>pe.edu.upc.ezshipping.models.entities.Cliente</class>
+		<class>pe.edu.upc.ezshipping.models.entities.Trabajador</class>
+		<class>pe.edu.upc.ezshipping.models.entities.Estado</class>
+		<class>pe.edu.upc.ezshipping.models.entities.EstadoEnvio</class>
+		<class>pe.edu.upc.ezshipping.models.entities.Paquete</class>
+		<class>pe.edu.upc.ezshipping.models.entities.Envio</class>
+		<class>pe.edu.upc.ezshipping.models.entities.Reclamo</class>
+		<class>pe.edu.upc.ezshipping.models.entities.Tarjeta</class>
+		<class>pe.edu.upc.ezshipping.models.entities.TipoCliente</class>
+		<class>pe.edu.upc.ezshipping.models.entities.Persona</class>
+		<exclude-unlisted-classes>false</exclude-unlisted-classes>
+		<properties>
+			<property
+				name="javax.persistence.schema-generation.database.action"
+				value="update" />
+		</properties>
+	</persistence-unit>
+
+</persistence>
