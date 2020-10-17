@@ -1,0 +1,90 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de Paquetes</title>
+</h:head>
+
+<h:body>
+
+	<h1>Paquetes</h1>
+	
+	<h:form id="form-paquete">
+		<p:panelGrid id="panel-paquete" columns="4" >
+			<p:outputLabel for="input-alto" value="Alto(m): " />
+			<p:inputNumber id="input-alto" value="#{paqueteView.paquete.alto}"/>
+			
+			<p:outputLabel for="input-ancho" value="Ancho(m): " />
+			<p:inputNumber id="input-ancho" value="#{paqueteView.paquete.ancho}"/>
+			
+			<p:outputLabel for="input-largo" value="Largo(m): " />
+			<p:inputNumber id="input-largo" value="#{paqueteView.paquete.largo}"/>
+			
+			<p:outputLabel for="input-precioUnitario" value="Precio Unitario(S/.): " />
+			<p:inputNumber id="input-precioUnitario" value="#{paqueteView.paquete.precioUnitario}"/>
+			
+			<p:outputLabel for="input-descripcion" value="Descripcion: " />
+			<p:inputText id="input-descripcion" value="#{paqueteView.paquete.descripcion}"/>
+			
+			<p:outputLabel for="input-peso" value="Peso(kg): " />
+			<p:inputNumber id="input-peso" value="#{paqueteView.paquete.peso}"/>
+		
+			<p:outputLabel for="select-envio" value="Código de envio: " />
+			<p:selectOneMenu id="select-envio" value="#{paqueteView.paquete.envioId}">
+				<f:selectItem itemLabel="Selecciona uno" itemValue="0" noSelectionOption="true"	/>
+				<f:selectItems value="#{envioView.envios}" var="envio"
+					itemLabel="#{envio.id}" itemValue="#{envio.id}" />
+			</p:selectOneMenu>
+		</p:panelGrid>
+		
+	<p:dataTable id="table-paquete" value="#{paqueteView.paquetes}" var="paquete" 
+			paginator="true" rows="3" paginatorPosition="bottom"
+			selectionMode="single" rowKey="#{paquete.id}">
+		<p:ajax event="rowSelect" listener="#{paqueteView.selectPaquete}"/>
+		<p:column headerText="Id">
+			<h:outputText value="#{paquete.id}" />
+		</p:column>
+		<p:column headerText="Alto (m)">
+			<h:outputText value="#{paquete.alto}" />
+		</p:column>
+		<p:column headerText="Ancho (m)">
+			<h:outputText value="#{paquete.ancho}" />
+		</p:column>
+		<p:column headerText="Largo (m)">
+			<h:outputText value="#{paquete.largo}" />
+		</p:column>
+		<p:column headerText="Precio unitario">
+			<h:outputText value="#{paquete.precioUnitario}" />
+		</p:column>
+		<p:column headerText="Descripcion">
+			<h:outputText value="#{paquete.descripcion}" />
+		</p:column>
+		<p:column headerText="Código de pedido">
+			<h:outputText value="#{paquete.envio.id}" />
+		</p:column>
+		<p:column headerText="Peso (kg)">
+			<h:outputText value="#{paquete.peso}" />
+		</p:column>
+	</p:dataTable>
+	
+		<p:toolbar>
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file" 
+					actionListener="#{paqueteView.newPaquete()}"
+					update=":form-paquete:panel-paquete"/>
+				<p:commandButton value="Guardar" icon="pi pi-save" 
+					actionListener="#{paqueteView.savePaquete()}"
+					update=":form-paquete:panel-paquete :form-paquete:table-paquete"/>
+				<p:commandButton value="Editar" icon="pi pi-pencil"  
+					actionListener="#{paqueteView.editTarjeta()}"
+					update=":form-paquete:panel-paquete"/>
+				<p:commandButton value="Eliminar" icon="pi pi-trash" 
+					actionListener="#{paqueteView.deleteTarjeta()}"
+					update=":form-paquete:panel-paquete :form-paquete:table-paquete"/>
+			</f:facet>
+		</p:toolbar>
+	</h:form>
+</h:body>
+</html>

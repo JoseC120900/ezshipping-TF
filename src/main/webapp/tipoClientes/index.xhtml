@@ -1,0 +1,89 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de Tipos de cliente</title>
+</h:head>
+
+<h:body>
+	
+	<h1>Tipos de cliente</h1>
+	
+	<h:form id="form-tipoCliente">
+		<p:growl id="growl" life="2000" />
+		<p:panelGrid columns="4" id="panel-tipoCliente" style="#{tipoClienteView.stylePanelTipoCliente}"> 
+			<p:outputLabel for="input-nombre" value="Nombre: " />
+			<p:inputText id="input-nombre" value="#{tipoClienteView.tipoCliente.nombre}"/>	
+			
+			<p:outputLabel for="input-descuento" value="Descuento: " />
+			<p:inputNumber  id="input-descuento" value="#{tipoClienteView.tipoCliente.descuento}"/>	
+		</p:panelGrid>
+		
+		<p:panelGrid id="panel-search" columns="4" style="#{tipoClienteView.styleTableTipoCliente}">
+			<p:outputLabel for="input-search-nombre" value="Nombre: " />
+			<p:inputText id="input-search-nombre" value="#{tipoClienteView.tipoClienteSearch.nombre}"/> 
+			<p:commandButton value="Buscar" icon="pi pi-search" 
+					actionListener="#{tipoClienteView.findByNombre()}"
+					update="form-tipoCliente:table-tipoCliente :form-tipoCliente:toolbar-tipoCliente" />
+			<p:commandButton value="Limpiar" icon="pi pi-undo" 
+					actionListener="#{tipoClienteView.cleanbyNombre()}"
+					update="@form"/>
+		</p:panelGrid>
+		
+		<p:dataTable id="table-tipoCliente" value="#{tipoClienteView.tipoClientes}" var="tipoCliente"
+				paginator="true" rows="3" paginatorPosition="bottom"
+				selectionMode="single" rowKey="#{tipoCliente.id}"
+				style="#{tipoClienteView.styleTableTipoCliente}" emptyMessage="No hay tipos de cliente"> 
+				
+			<p:ajax event="rowSelect" listener="#{tipoClienteView.selectTipoCliente}" update="@form"/>
+			<p:ajax event="rowUnselect" listener="#{tipoClienteView.unselectTipoCliente}" update="@form"/>
+			
+			<p:column headerText="Id">
+				<h:outputText value="#{tipoCliente.id}" />
+			</p:column>
+			<p:column headerText="Nombre">
+				<h:outputText value="#{tipoCliente.nombre}" />
+			</p:column>
+			<p:column headerText="Descuento">
+				<h:outputText value="#{tipoCliente.descuento}" />
+			</p:column>
+		</p:dataTable>
+		
+		<p:toolbar id="toolbar-tipoCliente">
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file" disabled="#{tipoClienteView.disabledButtonNuevo}" 
+					actionListener="#{tipoClienteView.newTipoCliente()}"
+					update="@form"/>
+					
+				<p:commandButton value="Guardar" icon="pi pi-save" disabled="#{tipoClienteView.disabledButtonGuardar}"
+					actionListener="#{tipoClienteView.saveTipoCliente()}"
+					update="@form"/>
+					
+				<p:commandButton value="Cancelar" icon="pi pi-times" disabled="#{tipoClienteView.disabledButtonCancelar}"
+					actionListener="#{tipoClienteView.cancelTipoCliente()}"
+					update="@form" />
+					
+				<p:commandButton value="Editar" icon="pi pi-pencil" disabled="#{tipoClienteView.disabledButtonEditar}"
+					actionListener="#{tipoClienteView.editTipoCliente()}"
+					update="@form"/>
+					
+				<p:commandButton value="Eliminar" icon="pi pi-trash" disabled="#{tipoClienteView.disabledButtonEliminar}"
+					actionListener="#{tipoClienteView.deleteTipoCliente()}" 
+					update=":form-tipoCliente:table-tipoCliente :form-tipoCliente:toolbar-tipoCliente" >
+					<p:confirm header="Confirmación" 
+						message="Estas seguro que deseas eliminar a: #{tipoClienteView.messageConfirmDialog}?" 
+						icon="pi pi-exclamation-triangle" />
+				</p:commandButton>
+				
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>
+			</f:facet>
+		</p:toolbar>
+	</h:form>
+
+</h:body>
+</html>

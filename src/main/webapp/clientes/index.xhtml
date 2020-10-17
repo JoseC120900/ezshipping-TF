@@ -1,0 +1,118 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de Clientes</title>
+</h:head>
+
+<h:body>
+	
+	<h1>Clientes</h1>
+	
+	<h:form id="form-cliente">
+		<p:growl id="growl" life="2000" />
+		<p:panelGrid columns="4" id="panel-cliente" style="#{clienteView.stylePanelCliente}"> 
+			<p:outputLabel for="select-persona" value="Persona: " />
+			<p:selectOneMenu id="select-persona" value="#{clienteView.cliente.personaId}">
+				<f:selectItem itemLabel="Selecciona uno" itemValue="0" noSelectionOption="true"	/>
+				<f:selectItems value="#{clienteView.personas}" var="persona"
+				itemLabel="#{persona.nombre}" itemValue="#{persona.id}" />
+			</p:selectOneMenu>
+			
+			<p:outputLabel for="select-tipoCliente" value="Tipo de Cliente: " />
+			<p:selectOneMenu id="select-tipoCliente" value="#{clienteView.cliente.tipoClienteId}">
+				<f:selectItem itemLabel="Selecciona uno" itemValue="0" noSelectionOption="true"	/>
+				<f:selectItems value="#{clienteView.tipoClientes}" var="tipoCliente"
+				itemLabel="#{tipoCliente.nombre}" itemValue="#{tipoCliente.id}" />
+			</p:selectOneMenu>
+			
+			<p:outputLabel for="input-DNI" value="DNI: " />
+			<p:inputNumber id="input-DNI" value="#{clienteView.cliente.DNI}"/>
+		</p:panelGrid>
+
+		<p:panelGrid id="panel-search" columns="4" style="#{clienteView.styleTableCliente}">
+			<p:outputLabel for="input-search-DNI" value="DNI: " />
+			<p:inputText id="input-search-DNI" value="#{clienteView.clienteSearch.DNI}"/> 
+			<p:commandButton value="Buscar" icon="pi pi-search" 
+					actionListener="#{clienteView.findByDNI()}"
+					update="form-cliente:table-cliente :form-cliente:toolbar-cliente" />
+			<p:commandButton value="Limpiar" icon="pi pi-undo" 
+					actionListener="#{clienteView.cleanbyDNI()}"
+					update="@form"/>
+		</p:panelGrid>
+		
+		<p:dataTable id="table-cliente" value="#{clienteView.clientes}" var="cliente" 
+				paginator="true" rows="3" paginatorPosition="bottom"
+				selectionMode="single" rowKey="#{cliente.id}"
+				style="#{clienteView.styleTableCliente}" emptyMessage="No hay Clientes"> 
+				
+			<p:ajax event="rowSelect" listener="#{clienteView.selectCliente}" update="@form"/>
+			<p:ajax event="rowUnselect" listener="#{clienteView.unselectCliente}" update="@form"/>
+			
+			<p:column headerText="Id">
+				<h:outputText value="#{cliente.persona.id}" />
+			</p:column>
+			
+			<p:column headerText="Nombre">
+				<h:outputText value="#{cliente.persona.nombre}" />
+			</p:column>
+			
+			<p:column headerText="Apellido">
+				<h:outputText value="#{cliente.persona.apellido}" />
+			</p:column>
+			
+			<p:column headerText="Email">
+				<h:outputText value="#{cliente.persona.email}" />
+			</p:column>
+			
+			<p:column headerText="Fecha de nacimiento: ">
+				<h:outputText value="#{cliente.persona.fechaNacimiento}" />
+			</p:column>
+
+			<p:column headerText="Tipo de cliente">
+				<h:outputText value="#{cliente.tipoCliente.nombre}" />
+			</p:column>
+			
+			<p:column headerText="DNI">
+				<h:outputText value="#{cliente.DNI}" />
+			</p:column>
+		</p:dataTable>
+		
+		<p:toolbar id="toolbar-cliente">
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file" disabled="#{clienteView.disabledButtonNuevo}"
+					actionListener="#{clienteView.newCliente()}"
+					update="@form" />
+
+				<p:commandButton value="Guardar" icon="pi pi-save" disabled="#{clienteView.disabledButtonGuardar}"
+					actionListener="#{clienteView.saveCliente()}"
+					update="@form" />
+				
+				<p:commandButton value="Cancelar" icon="pi pi-times" disabled="#{clienteView.disabledButtonCancelar}"
+					actionListener="#{clienteView.cancelCliente()}"
+					update="@form" />
+				
+				<p:commandButton value="Editar" icon="pi pi-pencil" disabled="#{clienteView.disabledButtonEditar}"  
+					actionListener="#{clienteView.editCliente()}"
+					update="@form" />
+
+				<p:commandButton value="Eliminar" icon="pi pi-trash" disabled="#{clienteView.disabledButtonEliminar}"
+					actionListener="#{clienteView.deleteCliente()}"
+					update=":form-cliente:panel-cliente :form-cliente:table-cliente">
+					<p:confirm header="Confirmación" 
+						message="Estas seguro que deseas eliminar a: #{clienteView.messageConfirmDialog}?" 
+						icon="pi pi-exclamation-triangle" />
+				</p:commandButton>
+				
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>
+			</f:facet>
+		</p:toolbar>
+	</h:form>
+
+</h:body>
+</html>
