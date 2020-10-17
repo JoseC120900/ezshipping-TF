@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de Estados</title>
+</h:head>
+
+<h:body>
+	
+	<h1>Estados</h1>
+	
+	<h:form id="form-estado">
+		<p:panelGrid columns="4" id="panel-estado" >
+			<p:outputLabel for="input-nombre" value="Nombre: " />
+			<p:inputText id="input-nombre" value="#{estadoView.estado.nombre}"/>	
+		</p:panelGrid>
+		
+		<p:dataTable id="table-estado" value="#{estadoView.estados}" var="estado"
+				paginator="true" rows="3" paginatorPosition="bottom"
+				selectionMode="single" rowKey="#{estado.id}">
+				
+			<p:ajax event="rowSelect" listener="#{estadoView.selectEstado}"/>
+			<p:ajax event="rowUnselect" listener="#{estadoView.unselectEstado}"/>
+			
+			<p:column headerText="Id">
+				<h:outputText value="#{estado.id}" />
+			</p:column>
+			<p:column headerText="Nombre">
+				<h:outputText value="#{estado.nombre}" />
+			</p:column>
+		</p:dataTable>
+	
+		<p:toolbar>
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file" 
+					actionListener="#{estadoView.newEstado()}"
+					update=":form-estado:panel-estado"/>
+				<p:commandButton value="Guardar" icon="pi pi-save"
+					actionListener="#{estadoView.saveEstado()}"
+					update=":form-estado:panel-estado :form-estado:table-estado"/>
+				<p:commandButton value="Editar" icon="pi pi-pencil" 
+					actionListener="#{estadoView.editEstado()}"
+					update=":form-estado:panel-estado"/>
+				<p:commandButton value="Eliminar" icon="pi pi-trash" 
+					actionListener="#{estadoView.deleteTarjeta()}"
+					update=":form-estado:panel-estado :form-estado:table-estado"/>
+			</f:facet>
+		</p:toolbar>
+	</h:form>
+
+</h:body>
+</html>
