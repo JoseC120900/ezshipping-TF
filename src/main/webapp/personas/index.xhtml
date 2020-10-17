@@ -1,0 +1,120 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de Personas</title>
+</h:head>
+
+<h:body>
+	
+	<h1>Personas</h1>
+	
+	<h:form id="form-persona">
+		<p:growl id="growl" life="2000" />
+		<p:panelGrid columns="4" id="panel-persona" style="#{personaView.stylePanelPersona}">
+			<p:outputLabel for="input-nombre" value="Nombre(s): " />
+			<p:inputText id="input-nombre" value="#{personaView.persona.nombre}"/>	
+			
+			<p:outputLabel for="input-apellido" value="Apellidos: " />
+			<p:inputText id="input-apellido" value="#{personaView.persona.apellido}"/>	
+			
+			<p:outputLabel for="input-email" value="Email: " />
+			<p:inputText id="input-email" value="#{personaView.persona.email}"/>
+			
+			<p:outputLabel for="input-fechaNacimiento" value="Fecha de nacimiento :"/>
+			<p:datePicker id="input-fechaNacimiento" value="#{personaView.persona.fechaNacimiento}" />
+		</p:panelGrid>
+		
+		<p:panelGrid id="panel-search" columns="4" style="#{personaView.styleTablePersona}">
+			<p:outputLabel for="input-search-nombre" value="Nombre: " />
+			<p:inputText id="input-search-nombre" value="#{personaView.personaSearch.nombre}"/> 
+			<p:commandButton value="Buscar" icon="pi pi-search" 
+					actionListener="#{personaView.findByNombre()}"
+					update="form-persona:table-persona :form-persona:toolbar-persona" />
+			<p:commandButton value="Limpiar" icon="pi pi-undo" 
+					actionListener="#{personaView.cleanbyNombre()}"
+					update="@form"/>
+
+			<p:outputLabel for="input-search-apellido" value="Apellido: " />
+			<p:inputText id="input-search-apellido" value="#{personaView.personaSearch.apellido}"/> 
+			<p:commandButton value="Buscar" icon="pi pi-search" 
+					actionListener="#{personaView.findByApellido()}"
+					update="form-persona:table-persona :form-persona:toolbar-persona" />
+			<p:commandButton value="Limpiar" icon="pi pi-undo" 
+					actionListener="#{personaView.cleanbyApellido()}"
+					update="@form"/>
+					
+			<p:outputLabel for="input-search-email" value="Email: " />
+			<p:inputText id="input-search-email" value="#{personaView.personaSearch.email}"/> 
+			<p:commandButton value="Buscar" icon="pi pi-search" 
+					actionListener="#{personaView.findByEmail()}"
+					update="form-persona:table-persona :form-persona:toolbar-persona" />
+			<p:commandButton value="Limpiar" icon="pi pi-undo" 
+					actionListener="#{personaView.cleanbyEmail()}"
+					update="@form"/>
+		</p:panelGrid>
+		
+		<p:dataTable id="table-persona" value="#{personaView.personas}" var="persona" 
+				paginator="true" rows="3" paginatorPosition="bottom"
+				selectionMode="single" rowKey="#{persona.id}"
+				style="#{personaView.styleTablePersona}" emptyMessage="No hay clientes"> 
+				
+			<p:ajax event="rowSelect" listener="#{personaView.selectPersona}" update="@form"/>
+			<p:ajax event="rowUnselect" listener="#{personaView.unselectPersona}" update="@form"/>
+
+			
+			<p:column headerText="Id">
+				<h:outputText value="#{persona.id}" />
+			</p:column>
+			<p:column headerText="Nombre(s)">
+				<h:outputText value="#{persona.nombre}" />
+			</p:column>
+			<p:column headerText="Apelllidos">
+				<h:outputText value="#{persona.apellido}" />
+			</p:column>
+			<p:column headerText="Email">
+				<h:outputText value="#{persona.email}" />
+			</p:column>
+			<p:column headerText="Fecha de nacimiento">
+				<h:outputText value="#{persona.fechaNacimiento}" />
+			</p:column>
+		</p:dataTable>
+		
+		<p:toolbar id="toolbar-persona">
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file" disabled="#{personaView.disabledButtonNuevo}"
+					actionListener="#{personaView.newPersona()}"
+					update="@form"/>
+
+				<p:commandButton value="Guardar" icon="pi pi-save" disabled="#{personaView.disabledButtonGuardar}"
+					actionListener="#{personaView.savePersona()}"
+					update="@form"/>
+
+				<p:commandButton value="Cancelar" icon="pi pi-times" disabled="#{personaView.disabledButtonCancelar}"
+					actionListener="#{personaView.cancelPersona()}"
+					update="@form" />
+
+				<p:commandButton value="Editar" icon="pi pi-pencil"  disabled="#{personaView.disabledButtonEditar	}"
+					actionListener="#{personaView.editPersona()}"
+					update="@form"/>
+
+				<p:commandButton value="Eliminar" icon="pi pi-trash" disabled="#{personaView.disabledButtonEliminar}"
+					actionListener="#{personaView.deletePersona()}"
+					update=":form-persona:table-persona :form-persona:toolbar-persona" >
+					<p:confirm header="Confirmación" 
+						message="Estas seguro que deseas elimininar a: #{personaView.messageConfirmDialog}?" 
+						icon="pi pi-exclamation-triangle" />
+				</p:commandButton>
+
+				<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					<p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+					<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+				</p:confirmDialog>
+			</f:facet>
+		</p:toolbar>
+	</h:form>
+
+</h:body>
+</html>

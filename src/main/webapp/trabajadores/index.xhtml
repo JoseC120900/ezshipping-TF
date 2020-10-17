@@ -1,0 +1,85 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de Trabajadores</title>
+</h:head>
+
+<h:body>
+	
+	<h1>Trabajadores</h1>
+	
+	<h:form id="form-trabajador">
+		<p:panelGrid columns="4" id="panel-trabajador"  >
+			<p:outputLabel for="select-persona" value="Persona: " />
+			<p:selectOneMenu id="select-persona" value="#{trabajadorView.trabajador.personaId}">
+				<f:selectItem itemLabel="Selecciona uno" itemValue="0" noSelectionOption="true"	/>
+				<f:selectItems value="#{trabajadorView.personas}" var="persona"
+				itemLabel="#{persona.nombre}" itemValue="#{persona.id}" />
+			</p:selectOneMenu>
+			
+			<p:outputLabel for="input-courier" value="Courier: " />
+			<p:selectBooleanCheckbox id="input-courier" value="#{trabajadorView.trabajador.courier}" itemLabel="Sí"/>	
+			
+			<p:outputLabel for="input-fechaContratacion" value="Fecha de contratacion: " />
+			<p:datePicker id="input-fechaContratacion" value="#{trabajadorView.trabajador.fechaContratacion}" />
+
+		</p:panelGrid>
+		
+	<p:dataTable id="table-trabajador" value="#{trabajadorView.trabajadores}" var="trabajador" 
+			paginator="true" rows="3" paginatorPosition="bottom"
+			selectionMode="single" rowKey="#{trabajador.id}">
+			
+		<p:ajax event="rowSelect" listener="#{trabajadorView.selectTrabajador}"/>
+		<p:ajax event="rowUnselect" listener="#{trabajadorView.unselectTrabajador}"/>
+		
+		<p:column headerText="Nombre">
+			<h:outputText value="#{trabajador.persona.nombre}" />
+		</p:column>
+		
+		<!-- <p:column headerText="Nombre"> -->
+			<!-- <h:outputText value="#{trabajador.persona.nombre}" /> -->
+		<!-- </p:column> -->
+		
+		<!-- <p:column headerText="Apelllido"> -->
+			<!-- <h:outputText value="#{trabajador.persona.apellido}" /> -->
+		<!-- </p:column> -->
+		
+		<!-- <p:column headerText="Email"> -->
+			<!-- <h:outputText value="#{trabajador.persona.email}" /> -->
+		<!-- </p:column> -->
+		
+		<!-- <p:column headerText="Fecha de nacimiento: "> -->
+			<!-- <h:outputText value="#{trabajador.persona.fechaNacimiento}" /> -->
+		<!-- </p:column>	 -->
+		
+		<p:column headerText="Fecha de contratacion">
+			<h:outputText value="#{trabajador.fechaContratacion}" />
+		</p:column>
+		
+		<p:column headerText="Courier">
+			<h:outputText value="#{trabajador.courier}" />
+		</p:column>
+	</p:dataTable>
+
+	<p:toolbar>
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file" 
+					actionListener="#{trabajadorView.newTrabajador()}"
+					update=":form-trabajador:panel-trabajador"/>
+				<p:commandButton value="Guardar" icon="pi pi-save" 
+					actionListener="#{trabajadorView.saveTrabajador()}"
+					update=":form-trabajador:panel-trabajador :form-trabajador:table-trabajador"/>
+				<p:commandButton value="Editar" icon="pi pi-pencil"   
+					actionListener="#{trabajadorView.editCliente()}"
+					update=":form-trabajador:panel-trabajador"/>
+				<p:commandButton value="Eliminar" icon="pi pi-trash" 
+					actionListener="#{trabajadorView.deleteCliente()}"
+					update=":form-trabajador:panel-trabajador :form-trabajador:table-trabajador"/>
+			</f:facet>
+		</p:toolbar>
+	</h:form>
+</h:body>
+</html>
