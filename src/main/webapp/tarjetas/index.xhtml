@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de Tarjetas</title>
+</h:head>
+
+<h:body>
+	
+	<h1>Tarjetas</h1>
+	
+	<h:form id="form-tarjeta">
+		<p:panelGrid columns="4" id="panel-tarjeta">
+				<p:outputLabel for="input-nroTarjeta" value="Número de tarjeta: " />
+				<p:inputNumber  id="input-nroTarjeta" value="#{tarjetaView.tarjeta.nroTarjeta}"/>
+				
+				<p:outputLabel for="input-fechaVencimiento" value="Fecha de vencimiento: "/>
+				<p:datePicker id="input-fechaVencimiento" value="#{tarjetaView.tarjeta.fechaVencimiento}" />
+				
+				<p:outputLabel for="input-cvv" value="CVV: " />
+				<p:inputNumber id="input-cvv" value="#{tarjetaView.tarjeta.cvv}"/>	
+		</p:panelGrid>
+			
+		<p:dataTable id="table-tarjeta" value="#{tarjetaView.tarjetas}" var="tarjeta"
+				paginator="true" rows="3" paginatorPosition="bottom"
+				selectionMode="single" rowKey="#{tarjeta.id}">
+				
+			<p:ajax event="rowSelect" listener="#{tarjetaView.selectTarjeta}"/>
+			<p:ajax event="rowUnselect" listener="#{tarjetaView.unselectTarjeta}"/>
+			
+			<p:column headerText="Id">
+				<h:outputText value="#{tarjeta.id}" />
+			</p:column>
+			<p:column headerText="Numero de Tarjeta">
+				<h:outputText value="#{tarjeta.nroTarjeta}" />
+			</p:column>
+			<p:column headerText="Fecha de vencimiento">
+				<h:outputText value="#{tarjeta.fechaVencimiento}" />
+			</p:column>
+			<p:column headerText="CVV">
+				<h:outputText value="#{tarjeta.cvv}" />
+			</p:column>
+		</p:dataTable>
+			
+		<p:toolbar>
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file" 
+					actionListener="#{tarjetaView.newTarjeta()}"
+					update=":form-tarjeta:panel-tarjeta"/>
+				<p:commandButton value="Guardar" icon="pi pi-save"
+					actionListener="#{tarjetaView.saveTarjeta()}"
+					update=":form-tarjeta:panel-tarjeta :form-tarjeta:table-tarjeta"/>
+				<p:commandButton value="Editar" icon="pi pi-pencil"  
+					actionListener="#{tarjetaView.editTarjeta()}"
+					update=":form-tarjeta:panel-tarjeta"/>
+				<p:commandButton value="Eliminar" icon="pi pi-trash" 
+					actionListener="#{tarjetaView.deleteTarjeta()}"
+					update=":form-tarjeta:panel-tarjeta :form-tarjeta:table-tarjeta"/>
+					
+			</f:facet>
+		</p:toolbar>
+	</h:form>
+</h:body>
+</html>

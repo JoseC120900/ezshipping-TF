@@ -1,0 +1,62 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de Reclamos</title>
+</h:head>
+
+<h:body>
+
+	<h1>Reclamos</h1>
+	
+	<h:form id="form-reclamo">
+		<p:panelGrid columns="4" id="panel-reclamo">
+			<p:outputLabel for="input-descripcion" value="Descripcion: " />
+			<p:inputText id="input-descripcion" value="#{reclamoView.reclamo.descripcion}"/>	
+			
+			<p:outputLabel for="input-fechaReclamo" value="Fecha de reclamo :"/>
+			<p:datePicker id="input-fechaReclamo" value="#{reclamoView.reclamo.fechaReclamo}" />
+		</p:panelGrid>
+		
+	<p:dataTable id="table-reclamo" value="#{reclamoView.reclamos}" var="reclamo" 
+				paginator="true" rows="3" paginatorPosition="bottom"
+				selectionMode="single" rowKey="#{reclamo.id}">
+				
+		<p:ajax event="rowSelect" listener="#{reclamoView.selectReclamo}"/>
+		<p:ajax event="rowUnselect" listener="#{reclamoView.unselectReclamo}"/>
+		
+		<p:column headerText="Id">
+			<h:outputText value="#{reclamo.id}" />
+		</p:column>
+
+		<p:column headerText="Descripcion">
+			<h:outputText value="#{reclamo.descripcion}" />
+		</p:column>
+
+		<p:column headerText="Fecha">
+			<h:outputText value="#{reclamo.fechaReclamo}" />
+		</p:column>
+		
+	</p:dataTable>
+	
+	<p:toolbar>
+		<f:facet name="left">
+			<p:commandButton value="Nuevo" icon="pi pi-file" 
+				actionListener="#{reclamoView.newReclamo()}"
+				update=":form-reclamo:panel-reclamo"/>
+			<p:commandButton value="Guardar" icon="pi pi-save" 
+				actionListener="#{reclamoView.saveReclamo()}"
+				update=":form-reclamo:panel-reclamo :form-reclamo:table-reclamo"/>
+			<p:commandButton value="Editar" icon="pi pi-pencil" 
+				actionListener="#{reclamoView.editReclamo()}"
+				update=":form-reclamo:panel-reclamo"/>
+			<p:commandButton value="Eliminar" icon="pi pi-trash" 
+				actionListener="#{reclamoView.deleteReclamo()}"
+				update=":form-reclamo:panel-reclamo :form-reclamo:table-reclamo"/>
+		</f:facet>
+		</p:toolbar>
+	</h:form>
+</h:body>
+</html>
