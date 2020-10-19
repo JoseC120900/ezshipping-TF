@@ -1,0 +1,150 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Lista de Envios</title>
+</h:head>
+
+<h:body>
+	
+	<h1>Envios</h1>
+	
+	<h:form id="form-envio">
+		<p:growl id="growl" life="2000" />
+		<p:panelGrid id="panel-envio" columns="4" style="#{envioView.stylePanelEnvio}"> 
+			<p:outputLabel for="select-cliente" value="Cliente: " />
+			<p:selectOneMenu id="select-cliente" value="#{envioView.envio.clienteId}">
+				<f:selectItem itemLabel="Selecciona uno" itemValue="0" noSelectionOption="true"	/>
+				<f:selectItems value="#{envioView.clientes}" var="cliente"
+					itemLabel="#{cliente.persona.nombre}" itemValue="#{cliente.id}" />
+			</p:selectOneMenu>
+			
+			<p:outputLabel for="input-direccionOrigen" value="Direccion de origen: " />
+			<p:inputText id="input-direccionOrigen" value="#{envioView.envio.direccionOrigen}"/>
+			
+			<p:outputLabel for="input-direccionDestino" value="Direccion de destino: " />
+			<p:inputText id="input-direccionDestino" value="#{envioView.envio.direccionDestino}"/>
+			
+			<p:outputLabel for="input-destinatario" value="Destinatario: " />
+			<p:inputText id="input-destinatario" value="#{envioView.envio.nombreDestinatario}"/>
+			
+			<p:outputLabel for="select-tarjeta" value="Tarjeta: " />
+			<p:selectOneMenu id="select-tarjeta" value="#{envioView.envio.tarjetaId}">
+				<f:selectItem itemLabel="Selecciona uno" itemValue="0" noSelectionOption="true"	/>
+				<f:selectItems value="#{envioView.tarjetas}" var="tarjeta"
+					itemLabel="#{tarjeta.nroTarjeta}" itemValue="#{tarjeta.id}" />
+			</p:selectOneMenu>
+			
+			<p:outputLabel for="select-reclamo" value="Reclamo: " />
+			<p:selectOneMenu id="select-reclamo" value="#{envioView.envio.reclamoId}">
+				<f:selectItem itemLabel="Selecciona uno" itemValue="0" noSelectionOption="true"	/>
+				<f:selectItems value="#{envioView.reclamos}" var="reclamo"
+					itemLabel="#{reclamo.descripcion}" itemValue="#{reclamo.id}" />
+			</p:selectOneMenu>
+			
+			<p:outputLabel for="select-trabajador" value="Courier: " />
+			<p:selectOneMenu id="select-trabajador" value="#{envioView.envio.trabajadorId}">
+				<f:selectItem itemLabel="Selecciona uno" itemValue="0" noSelectionOption="true"	/>
+				<f:selectItems value="#{envioView.trabajadores}" var="trabajador"
+					itemLabel="#{trabajador.persona.nombre}" itemValue="#{trabajador.id}" />
+			</p:selectOneMenu>
+			
+			<p:outputLabel for="input-monto" value="monto: " />
+			<p:inputNumber id="input-monto" value="#{envioView.envio.monto}"/>
+		</p:panelGrid>
+
+		<p:panelGrid id="panel-search" columns="4" style="#{envioView.styleTableEnvio}">
+			<p:outputLabel for="input-search-DirecOrigen" value="Direccion de origen: " />
+			<p:inputText id="input-search-DirecOrigen" value="#{envioView.envioSearch.direccionOrigen}"/> 
+			<p:commandButton value="Buscar" icon="pi pi-search" 
+					actionListener="#{envioView.findByDireccionOrigen()}"
+					update="form-envio:table-envio :form-envio:toolbar-envio" />
+			<p:commandButton value="Limpiar" icon="pi pi-undo" 
+					actionListener="#{envioView.cleanbyDireccionOrigen()}"
+					update="@form"/>
+			
+			<p:outputLabel for="input-search-DirecDestin" value="Direccion de destino: " />
+			<p:inputText id="input-search-DirecDestin" value="#{envioView.envioSearch.direccionDestino}"/> 
+			<p:commandButton value="Buscar" icon="pi pi-search" 
+					actionListener="#{envioView.findByDireccionDestino()}"
+					update="form-envio:table-envio :form-envio:toolbar-envio" />
+			<p:commandButton value="Limpiar" icon="pi pi-undo" 
+					actionListener="#{envioView.cleanbyDireccionDestino()}"
+					update="@form"/>
+		</p:panelGrid>
+	
+		<p:dataTable id="table-envio" value="#{envioView.envios}" var="envio" 
+					paginator="true" rows="3" paginatorPosition="bottom"
+					selectionMode="single" rowKey="#{envio.id}"
+					style="#{envioView.styleTableEnvio}" emptyMessage="No hay envios"> 
+					
+			<p:ajax event="rowSelect" listener="#{envioView.selectEnvio}" update="@form"/>
+			<p:ajax event="rowUnselect" listener="#{envioView.unselectEnvio}" update="@form"/>
+				
+			<p:column headerText="Id">
+				<h:outputText value="#{envio.id}" />
+			</p:column>
+			<p:column headerText="Cliente">
+				<h:outputText value="#{envio.cliente.persona.nombre}" />
+			</p:column>
+			<p:column headerText="Direccion de origen">
+				<h:outputText value="#{envio.direccionOrigen}" />
+			</p:column>
+			<p:column headerText="Direccion de destino">
+				<h:outputText value="#{envio.direccionDestino}" />
+			</p:column>
+			<p:column headerText="Nombre de destinatario">
+				<h:outputText value="#{envio.nombreDestinatario}" />
+			</p:column>
+			<p:column headerText="Nro Tarjeta">
+				<h:outputText value="#{envio.tarjeta.nroTarjeta}" />
+			</p:column>
+			<p:column headerText="Reclamo">
+				<h:outputText value="#{envio.reclamo.descripcion}" />
+			</p:column>
+			<p:column headerText="Courier">
+				<h:outputText value="#{envio.trabajador.persona.nombre}" />
+			</p:column>
+			<p:column headerText="Monto final">
+				<h:outputText value="#{envio.monto}" />	
+			</p:column>
+		</p:dataTable>
+		
+		<p:toolbar id="toolbar-envio">
+			<f:facet name="left">
+				<p:commandButton value="Nuevo" icon="pi pi-file" disabled="#{envioView.disabledButtonNuevo}"
+					actionListener="#{envioView.newEnvio()}"
+					update="@form"/>
+
+				<p:commandButton value="Guardar" icon="pi pi-save" disabled="#{envioView.disabledButtonGuardar}"
+					actionListener="#{envioView.saveEnvio()}"
+					update="@form"/>
+
+				<p:commandButton value="Cancelar" icon="pi pi-times" disabled="#{envioView.disabledButtonCancelar}"
+					actionListener="#{envioView.cancelEnvio()}"
+					update="@form"/>
+
+				<p:commandButton value="Editar" icon="pi pi-pencil" disabled="#{envioView.disabledButtonEditar}"
+					actionListener="#{envioView.editEnvio()}"
+					update="@form"/>
+
+				<p:commandButton value="Eliminar" icon="pi pi-trash" disabled="#{envioView.disabledButtonEliminar}"
+					actionListener="#{envioView.deleteEnvio()}"
+					update=":form-envio:table-envio :form-envio:toolbar-envio" >
+						<p:confirm header="Confirmación" 
+							message="Estas seguro que deseas eliminar envío: #{envioView.messageConfirmDialog}?" 
+							icon="pi pi-exclamation-triangle" />
+					</p:commandButton>
+					
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+			</f:facet>
+		</p:toolbar>
+	</h:form>
+
+</h:body>
+</html>
